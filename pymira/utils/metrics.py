@@ -129,7 +129,7 @@ class Logger():
             if loss_name not in self.loss_names:
                 raise ValueError('Logger was not constructed to log {}'.format(loss_name))
             else:
-                #self.epoch_logger[loss_name].append(loss_value.item())
+                self.epoch_logger[loss_name].append(loss_value.item())
 
     def update_epoch_summary(self, epoch, reset=True):
         for loss_name in self.loss_names:
