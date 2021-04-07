@@ -162,8 +162,10 @@ def set_up_model_and_preprocessing(phase, args):
 
 def process_batch(config, itn, stn, batch_samples):
     source, target = batch_samples['source'].to(config.device), batch_samples['target'].to(config.device)
-    source_seg, target_seg = batch_samples['source_seg'].to(config.device), batch_samples['target_seg'].to(
-        config.device)
+#def process_batch(config, itn, stn, batch_samples):
+#    source, target = batch_samples['source'].to(config.device), batch_samples['target'].to(config.device)
+#    source_seg, target_seg = batch_samples['source_seg'].to(config.device), batch_samples['target_seg'].to(
+#        config.device)
 
     if itn is not None:
         source_prime = itn(source)
@@ -178,27 +180,36 @@ def process_batch(config, itn, stn, batch_samples):
     stn(torch.cat((source_prime, target_prime), dim=1))
     warped_source = stn.warp_image(source)
     warped_source_prime = stn.warp_image(source_prime)
-    warped_source_seg = stn.warp_image(source_seg)
+    #warped_source_seg = stn.warp_image(source_seg)
 
     # Custom Metrics - thresholding at 0.5 is a bit arbitrarily and only makes sense if structure map is in [0,1]
-    target_seg_binary = target_seg > 0.5
-    warped_source_seg_binary = warped_source_seg > 0.5
-
-    dice = mira_metrics.dice_score(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
-    hausdorff_distance = \
-        mira_metrics.hausdorff_distance(warped_source_seg_binary, target_seg_binary, unindexed_classes=1, spacing=config.config.spacing)[
-            '1']
-    average_surface_distance = \
-        mira_metrics.average_surface_distance(warped_source_seg_binary, target_seg_binary, unindexed_classes=1, spacing=config.config.spacing)['1']
-    precision = mira_metrics.precision(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
-    recall = mira_metrics.recall(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
+    #target_seg_binary = target_seg > 0.5
+    #warped_source_seg_binary = warped_source_seg > 0.5
+    dice = 0
+    #dice = mira_metrics.dice_score(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
+    hausdorff_distance = 0
+    #hausdorff_distance = \
+    #    mira_metrics.hausdorff_distance(warped_source_seg_binary, target_seg_binary, unindexed_classes=1, spacing=config.config.spacing)[
+    #        '1']
+    average_surface_distance = 0
+    #average_surface_distance = \
+    #    mira_metrics.average_surface_distance(warped_source_seg_binary, target_seg_binary, unindexed_classes=1, spacing=config.config.spacing)['1']
+    precision = 0
+    #precision = mira_metrics.precision(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
+    recall = 0
+    #recall = mira_metrics.recall(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
 
     # General Loss Calculation
-    loss_itn = F.mse_loss(source_prime, source_seg) + F.mse_loss(target_prime, target_seg)
-    loss_stn_u = F.mse_loss(warped_source, target)
-    loss_stn_s = F.mse_loss(warped_source_seg, target_seg)
-    loss_stn_i = F.mse_loss(warped_source_prime, target_seg) + F.mse_loss(warped_source_seg, target_prime)
-    loss_stn_r = F.mse_loss(warped_source_prime, target_prime)
+    #loss_itn = F.mse_loss(source_prime, source_seg) + F.mse_loss(target_prime, target_seg)
+    #loss_stn_u = F.mse_loss(warped_source, target)
+    #loss_stn_s = F.mse_loss(warped_source_seg, target_seg)
+    #loss_stn_i = F.mse_loss(warped_source_prime, target_seg) + F.mse_loss(warped_source_seg, target_prime)
+    #loss_stn_r = F.mse_loss(warped_source_prime, target_prime)
+    loss_itn = 0
+    loss_stn_u = 0
+    loss_stn_s = 0
+    loss_stn_i = 0
+    loss_stn_r = 0
 
     if config.loss == 'explicit':
         loss_train = loss_itn + loss_stn_s      # ISTN-e
@@ -225,13 +236,14 @@ def process_batch(config, itn, stn, batch_samples):
 
     images_dict = {'source': source,
                   'source_prime': source_prime,
-                  'source_seg': source_seg,
+                  #'source_seg': source_seg,
                   'target': target,
                   'target_prime': target_prime,
-                  'target_seg': target_seg,
+                  #'target_seg': target_seg,
                   'warped_source': warped_source,
                   'warped_source_prime': warped_source_prime,
-                  'warped_source_seg': warped_source_seg}
+                  #'warped_source_seg': warped_source_seg
+                  }
 
     return loss_train, images_dict, values_dict
 
