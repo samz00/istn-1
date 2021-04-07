@@ -1,5 +1,11 @@
 src,trg
-<source>.nii.gz,<target>.nii.gz
-.
-.
-.
+data/brain3d/train/newdata_16.nii.gz,data/brain3d/train/newdata_75.nii.gz
+data/brain3d/train/newdata_21.nii.gz,data/brain3d/train/newdata_78.nii.gz
+data/brain3d/train/newdata_25.nii.gz,data/brain3d/train/newdata_87.nii.gz
+data/brain3d/train/newdata_27.nii.gz,data/brain3d/train/newdata_90.nii.gz
+data/brain3d/train/newdata_45.nii.gz,data/brain3d/train/newdata_94.nii.gz
+data/brain3d/train/newdata_50.nii.gz,data/brain3d/train/newdata_97.nii.gz
+data/brain3d/train/newdata_57.nii.gz,data/brain3d/train/newdata_100.nii.gz
+data/brain3d/train/newdata_64.nii.gz,data/brain3d/train/newdata_122.nii.gz
+data/brain3d/train/newdata_72.nii.gz,data/brain3d/train/newdata_124.nii.gz
+data/brain3d/train/newdata_135.nii.gz,data/brain3d/train/newdata_139.nii.gz
