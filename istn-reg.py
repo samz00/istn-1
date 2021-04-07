@@ -408,10 +408,10 @@ def test(args):
             sitk.WriteImage(warped_source,
                             os.path.join(out_dir, 'sample_' + str(index) + '_warped_source.nii.gz'))
 
-            warped_source_seg = sitk.GetImageFromArray(images_dict['warped_source_seg'].cpu().squeeze().numpy())
-            warped_source_seg.CopyInformation(dataset_test.get_sample(index)['target'])
-            sitk.WriteImage(warped_source_seg,
-                            os.path.join(out_dir, 'sample_' + str(index) + '_warped_source_seg.nii.gz'))
+            #warped_source_seg = sitk.GetImageFromArray(images_dict['warped_source_seg'].cpu().squeeze().numpy())
+            #warped_source_seg.CopyInformation(dataset_test.get_sample(index)['target'])
+            #sitk.WriteImage(warped_source_seg,
+            #                os.path.join(out_dir, 'sample_' + str(index) + '_warped_source_seg.nii.gz'))
 
             sitk.WriteImage(dataset_test.get_sample(index)['source'],
                             os.path.join(out_dir, 'sample_' + str(index) + '_source.nii.gz'))
