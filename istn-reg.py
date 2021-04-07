@@ -312,7 +312,7 @@ def train(args):
             global_step += 1
             config.optimizer.zero_grad()
             loss, images_dict, values_dict = process_batch(config, config.itn, config.stn, batch_samples)
-            loss.backward()
+            #loss.backward()
             config.optimizer.step()
             train_logger.update_epoch_logger(values_dict)
 
