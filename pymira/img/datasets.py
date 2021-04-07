@@ -114,7 +114,10 @@ class ImageSegRegDataset(Dataset):
 
             print('Reading target segmentation ' + trg_seg_path)
             target_seg = sitk.ReadImage(trg_seg_path, sitk.sitkFloat32)
-            
+        else:
+            source_seg = None
+            target_seg = None
+
         if csv_file_msk:
             self.msk_data = pd.read_csv(csv_file_msk)
 
