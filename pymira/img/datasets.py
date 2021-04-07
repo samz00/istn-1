@@ -176,8 +176,9 @@ class ImageSegRegDataset(Dataset):
 
             source.SetOrigin(np.zeros(len(source.GetOrigin())))
             target.SetOrigin(np.zeros(len(target.GetOrigin())))
-            source_seg.CopyInformation(source)
-            target_seg.CopyInformation(target)
+            if csv_file_seg:
+                source_seg.CopyInformation(source)
+                target_seg.CopyInformation(target)
             source_msk.CopyInformation(source)
             target_msk.CopyInformation(target)
 
