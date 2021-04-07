@@ -367,10 +367,11 @@ def train(args):
 
 def test(args):
     config = set_up_model_and_preprocessing('TESTING', args)
-
-    dataset_test = ImageSegRegDataset(args.test, args.test_seg, args.test_msk, normalizer_img=config.normalizer_img,
-                                      normalizer_seg=config.normalizer_seg, resampler_img=config.resampler_img,
-                                      resampler_seg=config.resampler_seg)
+    dataset_test = ImageSegRegDataset(args.test, args.test_msk, normalizer_img=config.normalizer_img,
+                                        resampler_img=config.resampler_img)
+    #dataset_test = ImageSegRegDataset(args.test, args.test_seg, args.test_msk, normalizer_img=config.normalizer_img,
+    #                                  normalizer_seg=config.normalizer_seg, resampler_img=config.resampler_img,
+    #                                  resampler_seg=config.resampler_seg)
     dataloader_test = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=False)
     loss_names = ['loss_itn', 'loss_stn_u', 'loss_stn_s', 'loss_stn_i', 'loss_stn_r', 'loss', 'metric_dice',
                   'metric_hd', 'metric_asd', 'metric_precision', 'metric_recall']
@@ -416,10 +417,10 @@ def test(args):
                             os.path.join(out_dir, 'sample_' + str(index) + '_source.nii.gz'))
             sitk.WriteImage(dataset_test.get_sample(index)['target'],
                             os.path.join(out_dir, 'sample_' + str(index) + '_target.nii.gz'))
-            sitk.WriteImage(dataset_test.get_sample(index)['source_seg'],
-                            os.path.join(out_dir, 'sample_' + str(index) + '_source_seg.nii.gz'))
-            sitk.WriteImage(dataset_test.get_sample(index)['target_seg'],
-                            os.path.join(out_dir, 'sample_' + str(index) + '_target_seg.nii.gz'))
+            #sitk.WriteImage(dataset_test.get_sample(index)['source_seg'],
+            #                os.path.join(out_dir, 'sample_' + str(index) + '_source_seg.nii.gz'))
+            #sitk.WriteImage(dataset_test.get_sample(index)['target_seg'],
+            #                os.path.join(out_dir, 'sample_' + str(index) + '_target_seg.nii.gz'))
         with open(os.path.join(out_dir,'test_results.yml'), 'w') as outfile:
             yaml.dump(test_logger.get_epoch_logger(), outfile)
     test_logger.update_epoch_summary(0)
