@@ -245,8 +245,8 @@ def train(args):
     print(separator)
     print('TRAINING data...')
     print(separator)
-    dataset_train = ImageSegRegDataset(args.train, args.train_seg, args.train_msk, normalizer_img=config.normalizer_img,
-                                        resampler_img=config.resampler_img)
+    dataset_train = ImageSegRegDataset(args.train, args.train_msk, normalizer_img=config.normalizer_img,
+                                        resampler_img=config.resampler_img,)
     #dataset_train = ImageSegRegDataset(args.train, args.train_seg, args.train_msk, normalizer_img=config.normalizer_img,
     #                                   normalizer_seg=config.normalizer_seg, resampler_img=config.resampler_img,
     #                                   resampler_seg=config.resampler_seg)
@@ -256,9 +256,11 @@ def train(args):
         print(separator)
         print('VALIDATION data...')
         print(separator)
-        dataset_val = ImageSegRegDataset(args.val, args.val_seg, args.val_msk, normalizer_img=config.normalizer_img,
-                                         normalizer_seg=config.normalizer_seg, resampler_img=config.resampler_img,
-                                         resampler_seg=config.resampler_seg)
+        dataset_val = ImageSegRegDataset(args.val, args.val_msk, normalizer_img=config.normalizer_img,
+                                         resampler_img=config.resampler_img)
+        #dataset_val = ImageSegRegDataset(args.val, args.val_seg, args.val_msk, normalizer_img=config.normalizer_img,
+        #                                 normalizer_seg=config.normalizer_seg, resampler_img=config.resampler_img,
+        #                                 resampler_seg=config.resampler_seg)
         dataloader_val = torch.utils.data.DataLoader(dataset_val, batch_size=1, shuffle=False)
 
     # Create output directory
@@ -274,8 +276,8 @@ def train(args):
             sample = dataset_train.get_sample(idx)
             sitk.WriteImage(sample['source'], os.path.join(temp_dir, 'sample_' + str(idx) + '_source.nii.gz'))
             sitk.WriteImage(sample['target'], os.path.join(temp_dir, 'sample_' + str(idx) + '_target.nii.gz'))
-            sitk.WriteImage(sample['source_seg'], os.path.join(temp_dir, 'sample_' + str(idx) + '_source_seg.nii.gz'))
-            sitk.WriteImage(sample['target_seg'], os.path.join(temp_dir, 'sample_' + str(idx) + '_target_seg.nii.gz'))
+            #sitk.WriteImage(sample['source_seg'], os.path.join(temp_dir, 'sample_' + str(idx) + '_source_seg.nii.gz'))
+            #sitk.WriteImage(sample['target_seg'], os.path.join(temp_dir, 'sample_' + str(idx) + '_target_seg.nii.gz'))
 
     print(separator)
 
