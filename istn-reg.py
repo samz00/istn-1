@@ -456,13 +456,16 @@ if __name__ == '__main__':
 
     # Data args
     parser.add_argument('--train', default='data/synth2d/train.csv', help='training data csv file')
-    parser.add_argument('--train_seg', default='data/synth2d/train.seg.csv', help='training data csv file')
+    #parser.add_argument('--train_seg', default='data/synth2d/train.seg.csv', help='training data csv file')
+    parser.add_argument('--train_seg', default=None, help='training data csv file')
     parser.add_argument('--train_msk', default=None, help='training data csv file')
     parser.add_argument('--val', default='data/synth2d/val.csv', help='validation data csv file')
-    parser.add_argument('--val_seg', default='data/synth2d/val.seg.csv', help='validation data csv file')
+    #parser.add_argument('--val_seg', default='data/synth2d/val.seg.csv', help='validation data csv file')
+    parser.add_argument('--val_seg', default=None, help='validation data csv file')
     parser.add_argument('--val_msk', default=None, help='validation data csv file')
     parser.add_argument('--test', default='data/synth2d/val.csv', help='testing data csv file')
-    parser.add_argument('--test_seg', default='data/synth2d/val.seg.csv', help='testing data csv file')
+    #parser.add_argument('--test_seg', default='data/synth2d/val.seg.csv', help='testing data csv file')
+    parser.add_argument('--test_seg', default=None, help='testing data csv file')
     parser.add_argument('--test_msk', default=None, help='testing data csv file')
 
     # Logging args

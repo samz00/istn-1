@@ -6,6 +6,6 @@
   "val_interval": 10,
   "normalizer_img": "range_matching",
   "normalizer_seg": "threshold_zero",
-  "size": [64, 64, 64],
+  "size": [92, 92, 36],
   "spacing": [3, 3, 3]
 }
