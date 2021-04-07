@@ -105,8 +105,16 @@ class ImageSegRegDataset(Dataset):
         :param resampler_seg (callable, optional): Optional transform to be applied on each segmentation.
         """
         self.img_data = pd.read_csv(csv_file_img)
-        self.seg_data = pd.read_csv(csv_file_seg)
+        if csv_file_seg:
+            self.seg_data = pd.read_csv(csv_file_seg)
+            src_seg_path = self.seg_data.iloc[idx, 0]
+            trg_seg_path = self.seg_data.iloc[idx, 1]
+            print('Reading source segmentation ' + src_seg_path)
+            source_seg = sitk.ReadImage(src_seg_path, sitk.sitkFloat32)
 
+            print('Reading target segmentation ' + trg_seg_path)
+            target_seg = sitk.ReadImage(trg_seg_path, sitk.sitkFloat32)
+            
         if csv_file_msk:
             self.msk_data = pd.read_csv(csv_file_msk)
 
@@ -115,8 +123,7 @@ class ImageSegRegDataset(Dataset):
             src_path = self.img_data.iloc[idx, 0]
             trg_path = self.img_data.iloc[idx, 1]
 
-            src_seg_path = self.seg_data.iloc[idx, 0]
-            trg_seg_path = self.seg_data.iloc[idx, 1]
+            
 
             print('Reading source image ' + src_path)
             source = sitk.ReadImage(src_path, sitk.sitkFloat32)
@@ -124,11 +131,7 @@ class ImageSegRegDataset(Dataset):
             print('Reading target image ' + trg_path)
             target = sitk.ReadImage(trg_path, sitk.sitkFloat32)
 
-            print('Reading source segmentation ' + src_seg_path)
-            source_seg = sitk.ReadImage(src_seg_path, sitk.sitkFloat32)
-
-            print('Reading target segmentation ' + trg_seg_path)
-            target_seg = sitk.ReadImage(trg_seg_path, sitk.sitkFloat32)
+           
 
             source_msk = sitk.GetImageFromArray(np.ones(source.GetSize()[::-1]))
             target_msk = sitk.GetImageFromArray(np.ones(target.GetSize()[::-1]))
