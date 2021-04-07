@@ -93,7 +93,7 @@ class ImageRegistrationDataset(Dataset):
 class ImageSegRegDataset(Dataset):
     """Dataset for pairwise image registration with segmentation loss."""
 
-    def __init__(self, csv_file_img, csv_file_seg, csv_file_msk=None, normalizer_img=None, resampler_img=None, normalizer_seg=None, resampler_seg=None):
+    def __init__(self, csv_file_img, csv_file_msk=None, normalizer_img=None, resampler_img=None):
         """
         Args:
         :param csv_file_img (string): Path to csv file with image filenames.
@@ -105,18 +105,18 @@ class ImageSegRegDataset(Dataset):
         :param resampler_seg (callable, optional): Optional transform to be applied on each segmentation.
         """
         self.img_data = pd.read_csv(csv_file_img)
-        if csv_file_seg:
-            self.seg_data = pd.read_csv(csv_file_seg)
-            src_seg_path = self.seg_data.iloc[idx, 0]
-            trg_seg_path = self.seg_data.iloc[idx, 1]
-            print('Reading source segmentation ' + src_seg_path)
-            source_seg = sitk.ReadImage(src_seg_path, sitk.sitkFloat32)
+        #if csv_file_seg:
+        #    self.seg_data = pd.read_csv(csv_file_seg)
+        #    src_seg_path = self.seg_data.iloc[idx, 0]
+        #    trg_seg_path = self.seg_data.iloc[idx, 1]
+        #    print('Reading source segmentation ' + src_seg_path)
+        #    source_seg = sitk.ReadImage(src_seg_path, sitk.sitkFloat32)
 
-            print('Reading target segmentation ' + trg_seg_path)
-            target_seg = sitk.ReadImage(trg_seg_path, sitk.sitkFloat32)
-        else:
-            source_seg = None
-            target_seg = None
+        #    print('Reading target segmentation ' + trg_seg_path)
+        #    target_seg = sitk.ReadImage(trg_seg_path, sitk.sitkFloat32)
+        #else:
+        #    source_seg = None
+        #    target_seg = None
 
         if csv_file_msk:
             self.msk_data = pd.read_csv(csv_file_msk)
@@ -161,14 +161,14 @@ class ImageSegRegDataset(Dataset):
                 source_msk = resampler_img(source_msk)
                 target_msk = resampler_img(target_msk)
             
-            if csv_file_seg:
-                if normalizer_seg:
-                    source_seg = normalizer_seg(source_seg)
-                    target_seg = normalizer_seg(target_seg)
+            #if csv_file_seg:
+            #    if normalizer_seg:
+            #        source_seg = normalizer_seg(source_seg)
+            #        target_seg = normalizer_seg(target_seg)
 
-                if resampler_seg:
-                    source_seg = resampler_seg(source_seg)
-                    target_seg = resampler_seg(target_seg)
+            #    if resampler_seg:
+            #        source_seg = resampler_seg(source_seg)
+            #        target_seg = resampler_seg(target_seg)
 
             if len(source.GetSize()) == 3:
                 source.SetDirection((1, 0, 0, 0, 1, 0, 0, 0, 1))
@@ -179,13 +179,13 @@ class ImageSegRegDataset(Dataset):
 
             source.SetOrigin(np.zeros(len(source.GetOrigin())))
             target.SetOrigin(np.zeros(len(target.GetOrigin())))
-            if csv_file_seg:
-                source_seg.CopyInformation(source)
-                target_seg.CopyInformation(target)
+            #if csv_file_seg:
+            #    source_seg.CopyInformation(source)
+            #    target_seg.CopyInformation(target)
             source_msk.CopyInformation(source)
             target_msk.CopyInformation(target)
 
-            sample = {'source': source, 'target': target, 'source_seg': source_seg, 'target_seg': target_seg, 'source_msk': source_msk, 'target_msk': target_msk}
+            sample = {'source': source, 'target': target, 'source_msk': source_msk, 'target_msk': target_msk}
 
             self.samples.append(sample)
 
@@ -197,14 +197,12 @@ class ImageSegRegDataset(Dataset):
 
         source = torch.from_numpy(sitk.GetArrayFromImage(sample['source'])).unsqueeze(0)
         target = torch.from_numpy(sitk.GetArrayFromImage(sample['target'])).unsqueeze(0)
-        source_seg = None
-        target_seg = None
         #source_seg = torch.from_numpy(sitk.GetArrayFromImage(sample['source_seg'])).unsqueeze(0)
         #target_seg = torch.from_numpy(sitk.GetArrayFromImage(sample['target_seg'])).unsqueeze(0)
         source_msk = torch.from_numpy(sitk.GetArrayFromImage(sample['source_msk'])).unsqueeze(0)
         target_msk = torch.from_numpy(sitk.GetArrayFromImage(sample['target_msk'])).unsqueeze(0)
 
-        return {'source': source, 'target': target, 'source_seg': source_seg, 'target_seg': target_seg, 'source_msk': source_msk, 'target_msk': target_msk}
+        return {'source': source, 'target': target, 'source_msk': source_msk, 'target_msk': target_msk}
 
     def get_sample(self, item):
         return self.samples[item]

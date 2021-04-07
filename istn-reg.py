@@ -245,10 +245,11 @@ def train(args):
     print(separator)
     print('TRAINING data...')
     print(separator)
-
     dataset_train = ImageSegRegDataset(args.train, args.train_seg, args.train_msk, normalizer_img=config.normalizer_img,
-                                       normalizer_seg=config.normalizer_seg, resampler_img=config.resampler_img,
-                                       resampler_seg=config.resampler_seg)
+                                        resampler_img=config.resampler_img)
+    #dataset_train = ImageSegRegDataset(args.train, args.train_seg, args.train_msk, normalizer_img=config.normalizer_img,
+    #                                   normalizer_seg=config.normalizer_seg, resampler_img=config.resampler_img,
+    #                                   resampler_seg=config.resampler_seg)
     dataloader_train = torch.utils.data.DataLoader(dataset_train, batch_size=config.config['batch_size'], shuffle=True)
 
     if args.val is not None:
