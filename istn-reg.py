@@ -456,10 +456,10 @@ def test(args):
                 sitk.WriteImage(warped_source,
                                 os.path.join(out_dir, 'sample_' + str(index) + '_warped_source_refined.nii.gz'))
 
-                warped_source_seg = sitk.GetImageFromArray(images_dict['warped_source_seg'].cpu().squeeze().numpy())
-                warped_source_seg.CopyInformation(dataset_test.get_sample(index)['target'])
-                sitk.WriteImage(warped_source_seg,
-                                os.path.join(out_dir, 'sample_' + str(index) + '_warped_source_seg_refined.nii.gz'))
+                #warped_source_seg = sitk.GetImageFromArray(images_dict['warped_source_seg'].cpu().squeeze().numpy())
+                #warped_source_seg.CopyInformation(dataset_test.get_sample(index)['target'])
+                #sitk.WriteImage(warped_source_seg,
+                #                os.path.join(out_dir, 'sample_' + str(index) + '_warped_source_seg_refined.nii.gz'))
             with open(os.path.join(out_dir, 'test_results_refined.yml'), 'w') as outfile:
                 yaml.dump(test_logger.get_epoch_logger(), outfile)
 
