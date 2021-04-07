@@ -157,14 +157,15 @@ class ImageSegRegDataset(Dataset):
                 target = resampler_img(target)
                 source_msk = resampler_img(source_msk)
                 target_msk = resampler_img(target_msk)
+            
+            if csv_file_seg:
+                if normalizer_seg:
+                    source_seg = normalizer_seg(source_seg)
+                    target_seg = normalizer_seg(target_seg)
 
-            if normalizer_seg:
-                source_seg = normalizer_seg(source_seg)
-                target_seg = normalizer_seg(target_seg)
-
-            if resampler_seg:
-                source_seg = resampler_seg(source_seg)
-                target_seg = resampler_seg(target_seg)
+                if resampler_seg:
+                    source_seg = resampler_seg(source_seg)
+                    target_seg = resampler_seg(target_seg)
 
             if len(source.GetSize()) == 3:
                 source.SetDirection((1, 0, 0, 0, 1, 0, 0, 0, 1))
