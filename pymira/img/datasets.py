@@ -197,8 +197,10 @@ class ImageSegRegDataset(Dataset):
 
         source = torch.from_numpy(sitk.GetArrayFromImage(sample['source'])).unsqueeze(0)
         target = torch.from_numpy(sitk.GetArrayFromImage(sample['target'])).unsqueeze(0)
-        source_seg = torch.from_numpy(sitk.GetArrayFromImage(sample['source_seg'])).unsqueeze(0)
-        target_seg = torch.from_numpy(sitk.GetArrayFromImage(sample['target_seg'])).unsqueeze(0)
+        source_seg = None
+        target_seg = None
+        #source_seg = torch.from_numpy(sitk.GetArrayFromImage(sample['source_seg'])).unsqueeze(0)
+        #target_seg = torch.from_numpy(sitk.GetArrayFromImage(sample['target_seg'])).unsqueeze(0)
         source_msk = torch.from_numpy(sitk.GetArrayFromImage(sample['source_msk'])).unsqueeze(0)
         target_msk = torch.from_numpy(sitk.GetArrayFromImage(sample['target_msk'])).unsqueeze(0)
 
