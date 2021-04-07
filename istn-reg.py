@@ -184,19 +184,24 @@ def process_batch(config, itn, stn, batch_samples):
 
     # Custom Metrics - thresholding at 0.5 is a bit arbitrarily and only makes sense if structure map is in [0,1]
     #target_seg_binary = target_seg > 0.5
+    target_binary = target > 0.5
     #warped_source_seg_binary = warped_source_seg > 0.5
-    dice = 0
+    warped_source_binary = warped_source > 0.5
+    dice =  mira_metrics.dice_score(warped_source_binary, target_binary, unindexed_classes=1)['1']
     #dice = mira_metrics.dice_score(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
-    hausdorff_distance = 0
+    hausdorff_distance = \
+        mira_metrics.hausdorff_distance(warped_source_binary, target_binary, unindexed_classes=1, spacing=config.config.spacing)[
+            '1']
     #hausdorff_distance = \
     #    mira_metrics.hausdorff_distance(warped_source_seg_binary, target_seg_binary, unindexed_classes=1, spacing=config.config.spacing)[
     #        '1']
-    average_surface_distance = 0
+    average_surface_distance = \
+        mira_metrics.average_surface_distance(warped_source_binary, target_binary, unindexed_classes=1, spacing=config.config.spacing)['1']
     #average_surface_distance = \
     #    mira_metrics.average_surface_distance(warped_source_seg_binary, target_seg_binary, unindexed_classes=1, spacing=config.config.spacing)['1']
-    precision = 0
+    precision = mira_metrics.precision(warped_source_binary, target_binary, unindexed_classes=1)['1']
     #precision = mira_metrics.precision(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
-    recall = 0
+    recall = mira_metrics.recall(warped_source_binary, target_binary, unindexed_classes=1)['1']
     #recall = mira_metrics.recall(warped_source_seg_binary, target_seg_binary, unindexed_classes=1)['1']
 
     # General Loss Calculation
@@ -205,11 +210,11 @@ def process_batch(config, itn, stn, batch_samples):
     #loss_stn_s = F.mse_loss(warped_source_seg, target_seg)
     #loss_stn_i = F.mse_loss(warped_source_prime, target_seg) + F.mse_loss(warped_source_seg, target_prime)
     #loss_stn_r = F.mse_loss(warped_source_prime, target_prime)
-    loss_itn = 0
-    loss_stn_u = 0
+    loss_itn = F.mse_loss(source_prime) + F.mse_loss(target_prime)
+    loss_stn_u = F.mse_loss(warped_source, target)
     loss_stn_s = 0
-    loss_stn_i = 0
-    loss_stn_r = 0
+    loss_stn_i = F.mse_loss(warped_source_prime) + F.mse_loss(target_prime)
+    loss_stn_r = F.mse_loss(warped_source_prime, target_prime)
 
     if config.loss == 'explicit':
         loss_train = loss_itn + loss_stn_s      # ISTN-e
