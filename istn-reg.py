@@ -211,7 +211,7 @@ def process_batch(config, itn, stn, batch_samples):
     #loss_stn_i = F.mse_loss(warped_source_prime, target_seg) + F.mse_loss(warped_source_seg, target_prime)
     #loss_stn_r = F.mse_loss(warped_source_prime, target_prime)
     loss_itn = F.mse_loss(source_prime, source) + F.mse_loss(target_prime, target)
-    loss_stn_u = F.mse_loss(warped_source, target)
+    loss_stn_u = F.mse_loss(source_prime, target)
     loss_stn_s = F.mse_loss(warped_source, target)
     #loss_stn_i = F.mse_loss(warped_source_prime, target) + F.mse_loss(warped_source, target_prime)
     loss_stn_i = F.mse_loss(warped_source_prime, target)
