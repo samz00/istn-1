@@ -173,7 +173,8 @@ def process_batch(config, itn, stn, batch_samples, batch_idx):
         itn_dir = os.path.join(args.out, 'test_itn')
         if not os.path.exists(itn_dir):
             os.makedirs(itn_dir)
-        sitk.WriteImage(source_prime, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_sourceprime.nii.gz'))
+        itn_prime = sitk.GetImageFromArray(source_prime.cpu().squeeze().numpy())
+        sitk.WriteImage(itn_prime, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itnprime.nii.gz'))
         if config.loss == 'unsupervised' or config.loss == 'supervised':
             source_prime = source
             target_prime = target
