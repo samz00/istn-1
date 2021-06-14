@@ -160,7 +160,7 @@ def set_up_model_and_preprocessing(phase, args):
     return AttrDict(config_dict)
 
 
-def process_batch(config, itn, stn, batch_samples):
+def process_batch(config, itn, stn, batch_samples, batch_idx):
     source, target = batch_samples['source'].to(config.device), batch_samples['target'].to(config.device)
 #def process_batch(config, itn, stn, batch_samples):
 #    source, target = batch_samples['source'].to(config.device), batch_samples['target'].to(config.device)
@@ -173,7 +173,7 @@ def process_batch(config, itn, stn, batch_samples):
         itn_dir = os.path.join(args.out, 'test_itn')
         if not os.path.exists(itn_dir):
             os.makedirs(itn_dir)
-        sitk.WriteImage(source_prime, os.path.join(itn_dir, 'itn' + str(index) + '_sourceprime.nii.gz'))
+        sitk.WriteImage(source_prime, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_sourceprime.nii.gz'))
         if config.loss == 'unsupervised' or config.loss == 'supervised':
             source_prime = source
             target_prime = target
@@ -322,7 +322,7 @@ def train(args):
         for batch_idx, batch_samples in enumerate(tqdm(dataloader_train, desc='Epoch {}'.format(epoch))):
             global_step += 1
             config.optimizer.zero_grad()
-            loss, images_dict, values_dict = process_batch(config, config.itn, config.stn, batch_samples)
+            loss, images_dict, values_dict = process_batch(config, config.itn, config.stn, batch_samples, batch_idx)
             #loss.backward()
             config.optimizer.step()
             train_logger.update_epoch_logger(values_dict)
@@ -338,7 +338,7 @@ def train(args):
 
             with torch.no_grad():
                 for batch_idx, batch_samples in enumerate(dataloader_val):
-                    loss, images_dict, values_dict = process_batch(config, config.itn, config.stn, batch_samples)
+                    loss, images_dict, values_dict = process_batch(config, config.itn, config.stn, batch_samples, batch_idx)
                     validation_logger.update_epoch_logger(values_dict)
 
             validation_logger.update_epoch_summary(epoch)
@@ -396,7 +396,7 @@ def test(args):
 
     with torch.no_grad():
         for index, batch_samples in enumerate(dataloader_test):
-            loss, images_dict, values_dict = process_batch(config, config.itn, config.stn, batch_samples)
+            loss, images_dict, values_dict = process_batch(config, config.itn, config.stn, batch_samples, index)
             test_logger.update_epoch_logger(values_dict)
 
             source_transformed = sitk.GetImageFromArray(images_dict['source_prime'].cpu().squeeze().numpy())
@@ -448,13 +448,13 @@ def test(args):
             # Fine tune STN
             for epoch in range(1, config.config['refine'] + 1):
                 optimizer.zero_grad()
-                _loss, images_dict, values_dict = process_batch(config, config.itn, refine_config.stn, batch_samples)
+                _loss, images_dict, values_dict = process_batch(config, config.itn, refine_config.stn, batch_samples, index)
                 loss = values_dict['loss_stn_r']
                 loss.backward()
                 optimizer.step()
 
             with torch.no_grad():
-                loss, images_dict, values_dict = process_batch(config, config.itn, refine_config.stn, batch_samples)
+                loss, images_dict, values_dict = process_batch(config, config.itn, refine_config.stn, batch_samples, index)
                 test_logger.update_epoch_logger(values_dict)
 
                 warped_source = sitk.GetImageFromArray(images_dict['warped_source'].cpu().squeeze().numpy())
