@@ -170,18 +170,29 @@ def process_batch(config, itn, stn, batch_samples, batch_idx):
     if itn is not None:
         source_prime = itn(source)
         target_prime = itn(target)
-        itn_dir = os.path.join(args.out, 'test_itn')
-        if not os.path.exists(itn_dir):
-            os.makedirs(itn_dir)
-        itn_prime = sitk.GetImageFromArray(source_prime.cpu().squeeze().detach().numpy())
-        sitk.WriteImage(itn_prime, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itnprime.nii.gz'))
+        
         if config.loss == 'unsupervised' or config.loss == 'supervised':
             source_prime = source
             target_prime = target
     else:
         source_prime = source
         target_prime = target
+    
+    itn_dir = os.path.join(args.out, 'test_itn')
+    if not os.path.exists(itn_dir):
+        os.makedirs(itn_dir)
+    itn_prime = sitk.GetImageFromArray(source_prime.cpu().squeeze().detach().numpy())
+    sitk.WriteImage(itn_prime, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itnprime.nii.gz'))
 
+    itn_source = sitk.GetImageFromArray(source.cpu().squeeze().detach().numpy())
+    sitk.WriteImage(itn_source, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itnsource.nii.gz'))
+
+    itn_targetprime = sitk.GetImageFromArray(target_prime.cpu().squeeze().detach().numpy())
+    sitk.WriteImage(itn_targetprime, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itntargetprime.nii.gz'))
+
+    itn_target = sitk.GetImageFromArray(source.cpu().squeeze().detach().numpy())
+    sitk.WriteImage(itn_target, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itntarget.nii.gz'))
+    
     stn(torch.cat((source_prime, target_prime), dim=1))
     warped_source = stn.warp_image(source)
     warped_source_prime = stn.warp_image(source_prime)
