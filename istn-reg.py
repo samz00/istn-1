@@ -190,12 +190,14 @@ def process_batch(config, itn, stn, batch_samples, batch_idx):
     itn_targetprime = sitk.GetImageFromArray(target_prime.cpu().squeeze().detach().numpy())
     sitk.WriteImage(itn_targetprime, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itntargetprime.nii.gz'))
 
-    itn_target = sitk.GetImageFromArray(source.cpu().squeeze().detach().numpy())
+    itn_target = sitk.GetImageFromArray(target.cpu().squeeze().detach().numpy())
     sitk.WriteImage(itn_target, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itntarget.nii.gz'))
-    
+
     stn(torch.cat((source_prime, target_prime), dim=1))
     warped_source = stn.warp_image(source)
     warped_source_prime = stn.warp_image(source_prime)
+    itn_warped = sitk.GetImageFromArray(warped_source_prime.cpu().squeeze().detach().numpy())
+    sitk.WriteImage(itn_warped, os.path.join(itn_dir, 'itn' + str(batch_idx) + '_itnwarpedprime.nii.gz'))
     #warped_source_seg = stn.warp_image(source_seg)
 
     # Custom Metrics - thresholding at 0.5 is a bit arbitrarily and only makes sense if structure map is in [0,1]
