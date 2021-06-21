@@ -239,7 +239,8 @@ def process_batch(config, itn, stn, batch_samples, batch_idx):
     if config.loss == 'explicit':
         loss_train = loss_itn + loss_stn_s      # ISTN-e
     elif config.loss == 'implicit':
-        loss_train = loss_stn_i + loss_stn_s    # ISTN-i
+        #loss_train = loss_stn_i + loss_stn_s    # ISTN-i
+        loss_train = loss_stn_i
     elif config.loss == 'supervised':
         loss_train = loss_stn_s                 # STN-s
     elif config.loss == 'unsupervised':
